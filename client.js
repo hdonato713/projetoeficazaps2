@@ -1,9 +1,12 @@
 const axios = require("axios");
+
+const url = "https://servidor-exercicios-js-eficaz.vercel.app";
 axios
+
 
  //Faz uma requisição do tipo post
   .post(
-    "https://servidor-exercicios-js-eficaz.vercel.app/token",
+    `${url}/token`,
     { username: "heitordf" },
     {
       headers: {
@@ -16,8 +19,17 @@ axios
   // quando der certo, esta será a resposta do servidor
   .then((resposta) => {
     const accessToken = resposta.data.accessToken; //recebe o token e qguarda na variável
-    console.log("Temos um token");
-  })
-  .catch((erro) => console.error(erro.message)); //pra caso dê erro, mas acho que não será útil
 
-  
+    return axios.get(`${url}/exercicio`, { //usa aurl e pega exercícios
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  })
+  .then((respostaExercicios) => {
+    console.log(JSON.stringify(respostaExercicios.data, null, 2)); // aquele que reflete no console
+  })
+
+  .catch((erro) => console.error(erro.message)); // o de possiveis erros
